@@ -1,16 +1,16 @@
 import pygame as pg
-from maphelper import Box
-
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
+from maphelper import Object
+from Maps import objects
+from config import colors, WINDOWHEIGHT, WINDOWWIDTH
 
 FPS = 60
 
 pg.init()
-vindu = pg.display.set_mode((0,0),pg.FULLSCREEN)
+window = pg.display.set_mode((WINDOWWIDTH,WINDOWHEIGHT))
 clock = pg.time.Clock()
+
+map = [Object(*object) for object in objects]
+
 
 
 
@@ -23,9 +23,9 @@ def main():
             elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 running = False
 
-        vindu.fill(BLUE)
-        
-
+        window.fill(colors["BLUE"])
+        for objects in map:
+            Object.draw(objects,vindu=window)
         pg.display.flip()
         clock.tick(FPS)
 
