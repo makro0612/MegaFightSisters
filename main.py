@@ -2,6 +2,8 @@ import pygame as pg
 from maphelper import Object
 from Maps import objects
 from config import colors, WINDOWHEIGHT, WINDOWWIDTH
+from characters.characterlogic import Character
+from characters.characterconfig import characters
 
 FPS = 60
 
@@ -11,7 +13,7 @@ clock = pg.time.Clock()
 
 map = [Object(*object) for object in objects]
 
-
+player1 = Character("basic", 0)
 
 
 def main():
@@ -24,8 +26,13 @@ def main():
                 running = False
 
         window.fill(colors["BLUE"])
-        for objects in map:
-            Object.draw(objects,vindu=window)
+
+        keys = pg.key.get_pressed()
+        player1.update(keys)
+        player1.draw(window)
+
+        for obj in map:
+            obj.draw(vindu=window)
         pg.display.flip()
         clock.tick(FPS)
 
