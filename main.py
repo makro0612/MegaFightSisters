@@ -1,4 +1,5 @@
 import pygame as pg
+from maphelper import Box
 
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -12,6 +13,7 @@ FPS = 60
 pg.init()
 vindu = pg.display.set_mode([VINDU_BREDDE, VINDU_HOYDE])
 clock = pg.time.Clock()
+
 
 
 def main():
