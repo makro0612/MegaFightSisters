@@ -54,37 +54,43 @@ class Character:
         # clamp x to window
         self.x = max(self.size, min(self.x, WINDOWWIDTH - self.size))
 
-        # check standing on ground or object (use center-based y)
-        on_ground = (self.y + self.size) >= (WINDOWHEIGHT - 10)
-        touching_index = -1
+        # standing check (before moving) — used to allow jumping
+        on_ground_start = (self.y + self.size) >= (WINDOWHEIGHT - 10)
+        standing_index = -1
         if objects:
-            touching_index = self.rect.collidelist(objects)
-        touching_object = touching_index != -1
-
+            checkrect = self.rect
+            checkrect.y += 1
+            standing_index = checkrect.collidelist(objects)
+        standing_on_object = standing_index != -1
         # jump: set upward velocity when on ground or standing on an object
-        if keys[jump_key] and (on_ground or touching_object) and self.vy >= 0:
+        if keys[jump_key] and (on_ground_start or standing_on_object) and self.vy >= 0:
             self.vy = -self.JUMPSPEED
 
         # apply gravity and vertical motion
         self.vy += self.GRAVITY
-        prev_y = self.y
         self.y += self.vy
+
+        # allow dropping through platforms if down is held while falling
+        drop_through = keys[down_key] and self.vy >= 0
 
         # ground collision
         if (self.y + self.size) >= (WINDOWHEIGHT - 10):
             self.y = WINDOWHEIGHT - 10 - self.size
             self.vy = 0
 
-        # object collision (landing)
-        if touching_object and self.vy >= 0:
-            platform = objects[touching_index]
-            # if we passed through the top of the platform this frame, snap to its top
-            if (prev_y + self.size) <= platform.top <= (self.y + self.size):
-                self.y = platform.top - self.size
-                self.vy = 0
+        # object collision (landing): check collisions after movement and only if not dropping through
+        if objects and not drop_through:
+            temp_rect = pg.Rect(int(self.x - self.size), int(self.y), self.size*2, self.size*2)
+            collided_index = temp_rect.collidelist(objects)
+            if collided_index != -1 and self.vy >= 0:
+                platform = objects[collided_index]
+                # if we passed through the top of the platform this frame, snap to its top
+                if self.y - platform.top < -6:
+                    self.y = platform.top - self.size * 2
+                    self.vy = 0
 
         # update rect position (centered)
-        self.rect.topleft = (int(self.x - self.size), int(self.y - self.size))
+        self.rect.topleft = (int(self.x - self.size), int(self.y))
 
     def draw(self, window):
-        pg.draw.circle(window, (255, 0, 0), (int(self.x), int(self.y)), self.size*2) 
+        pg.draw.rect(window,(0,255,0),self.rect)
