@@ -24,7 +24,7 @@ def main():
             elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 running = False
 
-        window.fill(colors["BLUE"])
+        window.fill(colors["WHITE"])
 
         keys = pg.key.get_pressed()
         object_rects = [obj.rect for obj in map]

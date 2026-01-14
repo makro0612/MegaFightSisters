@@ -25,6 +25,8 @@ class Character:
         # rect used for collisions (centered on the circle)
         self.rect = pg.Rect(int(self.x - self.size), int(self.y - self.size), self.size * 2, self.size * 2)
 
+        self.font = pg.font.SysFont(None, 20)
+
     def update(self, keys, objects: list[pg.Rect] | None = None):
         # key groups for input checks (index 0 = player1, 1 = player2)
         yourkeys = {
@@ -86,5 +88,8 @@ class Character:
         # update rect position (centered)
         self.rect.topleft = (int(self.x - self.size), int(self.y))
 
-    def draw(self, window):
+    def draw(self, window: pg.Surface):
         pg.draw.rect(window,(0,255,0),self.rect)
+        font_surface = self.font.render(str(self.health),True,(0,0,0))
+        window.blit(font_surface,(self.x-font_surface.get_width()//2,self.y-self.size*2))
+    
