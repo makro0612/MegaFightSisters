@@ -4,7 +4,7 @@ from characters.characterconfig import characters
 from config import WINDOWHEIGHT, WINDOWWIDTH
 
 class Character:
-    def __init__(self, character: str, playernumber: int):
+    def __init__(self, character: str, playernumber: int, startpos: int):
         # physics tuning
         self.JUMPSPEED = 12    # initial jump velocity (px/frame)
         self.GRAVITY = 0.8     # gravity (px/frame^2)
@@ -20,13 +20,7 @@ class Character:
 
         self.playernumber = playernumber
 
-        # starting position based on player number (x,y are center coords)
-        margin = 50
-        if self.playernumber == 0:
-            self.x = margin + self.size
-        else:
-            self.x = WINDOWWIDTH - margin - self.size
-        self.y = WINDOWHEIGHT - self.size - 10
+        self.x,self.y = startpos
 
         # rect used for collisions (centered on the circle)
         self.rect = pg.Rect(int(self.x - self.size), int(self.y - self.size), self.size * 2, self.size * 2)

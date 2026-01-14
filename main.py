@@ -1,9 +1,8 @@
 import pygame as pg
 from maphelper import Object
-from Maps import objects
+from Maps import MAPS
 from config import colors, WINDOWHEIGHT, WINDOWWIDTH
 from characters.characterlogic import Character
-from characters.characterconfig import characters
 
 FPS = 60
 
@@ -11,10 +10,10 @@ pg.init()
 window = pg.display.set_mode((WINDOWWIDTH,WINDOWHEIGHT))
 clock = pg.time.Clock()
 
-map = [Object(*object) for object in objects]
+map = [Object(*object) for object in MAPS["basic"]["objects"]]
 
-player1 = Character("basic", 0)
-player2 = Character("basic", 1)
+player1 = Character("basic", 0,MAPS["basic"]["startpos"][0])
+player2 = Character("basic", 1,MAPS["basic"]["startpos"][1])
 
 def main():
     running = True
