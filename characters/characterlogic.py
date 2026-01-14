@@ -1,7 +1,7 @@
 import pygame as pg
 from pygame.locals import (K_w,K_a,K_s,K_d,K_UP,K_LEFT,K_RIGHT,K_DOWN)
-from characters.characterconfig import characters
-from config import WINDOWHEIGHT, WINDOWWIDTH, FPS
+from characters.characterconfig import CHARACTERS
+from config import WINDOWHEIGHT, WINDOWWIDTH
 
 class Character:
     def __init__(self, character: str, playernumber: int, startpos: int):
@@ -11,7 +11,7 @@ class Character:
         self.GRAVITY = 0.8     # gravity (px/frame^2)
         self.vy = 0            # vertical velocity
 
-        self.attributes = characters[character]
+        self.attributes = CHARACTERS[character]
         self.speed = self.attributes["speed"]
         self.size = self.attributes["size"]  # pixel radius
         self.range = self.attributes["range"]
@@ -36,11 +36,12 @@ class Character:
         self.left_key = yourkeys["left"][playernumber]
         self.down_key = yourkeys["down"][playernumber]
         self.right_key = yourkeys["right"][playernumber]
+        self.playernumber = playernumber
 
         # rect used for collisions (centered on the circle)
         self.rect = pg.Rect(int(self.x - self.size), int(self.y - self.size), self.size * 2, self.size * 2)
 
-        self.font = pg.font.SysFont(None, 20)
+        self.font = pg.font.SysFont("segoeuiemoji", 50)
 
     def update(self, keys, objects: list[pg.Rect] | None = None):
         if self.alive:
@@ -103,6 +104,6 @@ class Character:
 
     def draw(self, window: pg.Surface):
         pg.draw.rect(window,(0,255,0),self.rect)
-        font_surface = self.font.render(str(self.health),True,(0,0,0))
-        window.blit(font_surface,(self.x-font_surface.get_width()//2,self.y-self.size*2))
+        font_surface = self.font.render(str(f"{self.health}❤️"),True,(0,0,0))
+        window.blit(font_surface,(WINDOWWIDTH*self.playernumber-font_surface.get_width()*(self.playernumber-0.1)*1.11,50))
     
