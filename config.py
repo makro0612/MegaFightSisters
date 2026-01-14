@@ -3,5 +3,5 @@ colors = {
     "RED": (255, 0, 0),
     "GREEN": (0, 255, 0),
     "BLUE": (0, 0, 255)}
-WINDOWHEIGHT = 1080
-WINDOWWIDTH = 1920
+WINDOWHEIGHT = 540
+WINDOWWIDTH = 960
