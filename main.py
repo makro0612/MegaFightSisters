@@ -1,10 +1,8 @@
 import pygame as pg
 from maphelper import Object
 from Maps import MAPS
-from config import colors, WINDOWHEIGHT, WINDOWWIDTH
+from config import colors, WINDOWHEIGHT, WINDOWWIDTH, FPS
 from characters.characterlogic import Character
-
-FPS = 60
 
 pg.init()
 window = pg.display.set_mode((WINDOWWIDTH,WINDOWHEIGHT))

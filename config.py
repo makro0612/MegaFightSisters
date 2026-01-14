@@ -5,3 +5,4 @@ colors = {
     "BLUE": (0, 0, 255)}
 WINDOWHEIGHT = 540
 WINDOWWIDTH = 960
+FPS = 60
