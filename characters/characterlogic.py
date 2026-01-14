@@ -20,6 +20,7 @@ class Character:
 
         self.playernumber = playernumber
 
+        self.startpos = startpos
         self.x,self.y = startpos
 
         # rect used for collisions (centered on the circle)
@@ -47,11 +48,8 @@ class Character:
         if keys[right_key]:
             self.x += self.speed
 
-        # clamp x to window
-        self.x = max(self.size, min(self.x, WINDOWWIDTH - self.size))
 
         # standing check (before moving) — used to allow jumping
-        on_ground_start = (self.y + self.size) >= (WINDOWHEIGHT - 10)
         standing_index = -1
         if objects:
             checkrect = self.rect
@@ -59,7 +57,7 @@ class Character:
             standing_index = checkrect.collidelist(objects)
         standing_on_object = standing_index != -1
         # jump: set upward velocity when on ground or standing on an object
-        if keys[jump_key] and (on_ground_start or standing_on_object) and self.vy >= 0:
+        if keys[jump_key] and standing_on_object and self.vy >= 0:
             self.vy = -self.JUMPSPEED
 
         # apply gravity and vertical motion
@@ -70,9 +68,13 @@ class Character:
         drop_through = keys[down_key] and self.vy >= 0
 
         # ground collision
-        if (self.y + self.size) >= (WINDOWHEIGHT - 10):
-            self.y = WINDOWHEIGHT - 10 - self.size
-            self.vy = 0
+        if ((self.y + self.size) >= (WINDOWHEIGHT) 
+            or (self.x + self.size) >= (WINDOWWIDTH)
+            or (self.x - self.size) <= 0):
+            self.health -= 1
+            if self.health > 0:
+                self.x,self.y = self.startpos
+                self.vy, self.vx = (0,0)
 
         # object collision (landing): check collisions after movement and only if not dropping through
         if objects and not drop_through:
