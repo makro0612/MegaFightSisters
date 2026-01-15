@@ -3,10 +3,10 @@ import os
 
 class Object():
 
-    def __init__(self, x:int,y:int,length:int,height:int, color) -> None:
+    def __init__(self, x:int,y:int,length:int,height:int, color, platform:bool = True) -> None:
         self.rect = pg.Rect(x,y,length,height)
         self.color = color
-        #liste.append(self)
+        self.platform = platform
     
     def __repr__(self) -> str:
         return f"Obstacle som er på {self.rect.x}, x, og {self.rect.y}, y "

@@ -27,9 +27,9 @@ def main():
         keys = pg.key.get_pressed()
         object_rects = [obj.rect for obj in map]
 
-        player1.update(keys, object_rects)
+        player1.update(keys, object_rects, map)
         player1.draw(window)
-        player2.update(keys, object_rects)
+        player2.update(keys, object_rects, map)
         player2.draw(window)
 
         for obj in map:

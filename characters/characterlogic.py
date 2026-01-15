@@ -43,7 +43,7 @@ class Character:
 
         self.font = pg.font.SysFont("segoeuiemoji", 50)
 
-    def update(self, keys, objects: list[pg.Rect] | None = None):
+    def update(self, keys, objects: list[pg.Rect] | None = None, map = None):
         if self.alive:
         # horizontal movement
             if keys[self.left_key]:
@@ -78,15 +78,16 @@ class Character:
                 self.alive = False
 
             # object collision (landing): check collisions after movement and only if not dropping through
-            if objects and not drop_through:
+            if objects:
                 temp_rect = pg.Rect(int(self.x - self.size), int(self.y), self.size*2, self.size*2)
                 collided_index = temp_rect.collidelist(objects)
                 if collided_index != -1 and self.vy >= 0:
                     platform = objects[collided_index]
-                    # if we passed through the top of the platform this frame, snap to its top
-                    if self.y - platform.top < -6:
-                        self.y = platform.top - self.size * 2
-                        self.vy = 0
+                    if  not drop_through or not map[collided_index].platform:
+                        # if we passed through the top of the platform this frame, snap to its top
+                        if self.y - platform.top < 0:
+                            self.y = platform.top - self.size * 2
+                            self.vy = 0
 
         elif not self.alive:
             self.vy, self.vx = (0,0)
