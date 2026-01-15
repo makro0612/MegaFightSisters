@@ -1,7 +1,7 @@
 import pygame as pg
 from maphelper import Object
 from Maps import MAPS
-from config import colors, WINDOWHEIGHT, WINDOWWIDTH, FPS
+from config import COLORS, WINDOWHEIGHT, WINDOWWIDTH, FPS
 from characters.characterlogic import Character
 
 pg.init()
@@ -22,7 +22,7 @@ def main():
             elif event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 running = False
 
-        window.fill(colors["WHITE"])
+        window.fill(COLORS["WHITE"])
 
         keys = pg.key.get_pressed()
         object_rects = [obj.rect for obj in map]

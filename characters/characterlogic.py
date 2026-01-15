@@ -1,7 +1,7 @@
 import pygame as pg
 from pygame.locals import (K_w,K_a,K_s,K_d,K_UP,K_LEFT,K_RIGHT,K_DOWN)
 from characters.characterconfig import CHARACTERS
-from config import WINDOWHEIGHT, WINDOWWIDTH
+from config import WINDOWHEIGHT, WINDOWWIDTH, COLORS
 
 class Character:
     def __init__(self, character: str, playernumber: int, startpos: int):
@@ -22,6 +22,7 @@ class Character:
         self.startpos = startpos
         self.x,self.y = startpos
         self.alive = True
+        self.direction = None
         self.respawncounter = 0
 
         # key groups for input checks (index 0 = player1, 1 = player2)
@@ -45,11 +46,16 @@ class Character:
 
     def update(self, keys, objects: list[pg.Rect] | None = None, map = None):
         if self.alive:
-        # horizontal movement
+            # horizontal movement
             if keys[self.left_key]:
                 self.x -= self.speed
+                self.direction = "left"
             if keys[self.right_key]:
                 self.x += self.speed
+                self.direction = "right"
+            if keys[self.left_key] == keys[self.right_key]:
+                self.direction = None
+            
 
 
             # standing check (before moving) — used to allow jumping
@@ -105,6 +111,7 @@ class Character:
 
     def draw(self, window: pg.Surface):
         pg.draw.rect(window,(0,255,0),self.rect)
-        font_surface = self.font.render(str(f"{self.health}❤️"),True,(0,0,0))
-        window.blit(font_surface,(WINDOWWIDTH*self.playernumber-font_surface.get_width()*(self.playernumber-0.1)*1.11,50))
+        font_surface = self.font.render(str(f"{self.health}❤️"),True,COLORS["BLACK"])
+        #0.1 og -0.11 er justification av skriften
+        window.blit(font_surface,(WINDOWWIDTH*self.playernumber-font_surface.get_width()*(self.playernumber-0.1)*1.11 ,50))
     
