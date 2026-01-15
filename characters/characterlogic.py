@@ -2,9 +2,38 @@ import pygame as pg
 from pygame.locals import (K_w,K_a,K_s,K_d,K_UP,K_LEFT,K_RIGHT,K_DOWN)
 from characters.characterconfig import CHARACTERS
 from config import WINDOWHEIGHT, WINDOWWIDTH, COLORS
+from pathlib import Path
 
 class Character:
-    def __init__(self, character: str, playernumber: int, startpos: int):
+
+
+
+    IMAGE_DIR = Path(__file__).parent / "Sprites" / "PNG" / "Swordsman_lvl1" / "Without_shadow"
+    FRAME_WIDTH = 64
+
+    def getImageSpriteList(self, image_name: str, row:int) -> list[pg.Surface]:
+        full_image = pg.image.load(self.IMAGE_DIR / image_name)
+        # Finn antall frames basert på bildebredde
+        num_frames = full_image.get_width() // self.FRAME_WIDTH
+        
+        # Dele opp bildet i frames, som lagres i en liste:
+        frames = []
+        for i in range(num_frames):
+            # OBS: ANTAR at bildene er kvadratiske - bruker frame widht både som høye og bredde
+            frame = full_image.subsurface(pg.Rect(i * self.FRAME_WIDTH, row*self.FRAME_WIDTH - self.FRAME_WIDTH, self.FRAME_WIDTH, self.FRAME_WIDTH))
+            frames.append(frame)
+        return frames
+    
+    def getSingleSpriteImage(self, image_name) -> pg.Surface:
+        full_image = pg.image.load(self.IMAGE_DIR / image_name)
+        return full_image
+
+
+
+    def __init__(self, character: str, playernumber: int, startpos: tuple[int,int]):
+
+        self.frames_run_left = self.getImageSpriteList("Swordsman_lvl1_Run_without_shadow.png",2)
+        self.current_frame = 0
         # physics tuning
         self.RESPAWNTICKS = 60
         self.JUMPSPEED = 12    # initial jump velocity (px/frame)
@@ -41,7 +70,7 @@ class Character:
 
         # rect used for collisions (centered on the circle)
         self.rect = pg.Rect(int(self.x - self.size), int(self.y - self.size), self.size * 2, self.size * 2)
-
+        self.image_rect = pg.Rect(0,0,64,64)
         self.font = pg.font.SysFont("segoeuiemoji", 50)
 
     def update(self, keys, objects: list[pg.Rect] | None = None, map = None):
@@ -110,7 +139,13 @@ class Character:
 
 
     def draw(self, window: pg.Surface):
-        pg.draw.rect(window,(0,255,0),self.rect)
+        current_frame_image = self.frames_run_left[self.current_frame]
+        #pg.draw.rect(window,COLORS["RED"],self.rect)
+        self.image_rect.center = self.rect.center
+        window.blit(current_frame_image, self.image_rect)
+
+
+
         font_surface = self.font.render(str(f"{self.health}❤️"),True,COLORS["BLACK"])
         #0.1 og -0.11 er justification av skriften
         window.blit(font_surface,(WINDOWWIDTH*self.playernumber-font_surface.get_width()*(self.playernumber-0.1)*1.11 ,50))
